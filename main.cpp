@@ -1,34 +1,42 @@
-// snakepit.cpp
-
+#include "glut.h"
+#include "GameController.h"
 #include <iostream>
-using namespace std;
+#include <fstream>
 #include <string>
 #include <cstdlib>
 #include <ctime>
-#include "Snake.h"
-#include "Player.h"
-#include "Pit.h"
-#include "Game.h"
-#include "History.h"
+using namespace std;
 
+  // If your program is having trouble finding the Assets directory,
+  // replace the string literal with a full path name to the directory,
+  // e.g., "Z:/CS32/BoulderBlast/Assets" or "/Users/fred/cs32/BoulderBlast/Assets"
 
+const string assetDirectory = "Assets"; 
 
-///////////////////////////////////////////////////////////////////////////
-//  main()
-///////////////////////////////////////////////////////////////////////////
+class GameWorld;
 
-int main()
+GameWorld* createStudentWorld(string assetDir = "");
+
+int main(int argc, char* argv[])
 {
-	// Initialize the random number generator.  (You don't need to
-	// understand how this works.)
-	srand(static_cast<unsigned int>(time(0)));
+	{
+		string path = assetDirectory;
+		if (!path.empty())
+			path += '/';
+		ifstream ifs(path + "level00.dat");
+		if (!ifs)
+		{
+			cout << "Cannot find level00.dat in ";
+			cout << (assetDirectory.empty() ? "current directory"
+											: assetDirectory) << endl;
+			return 1;
+		}
+	}
 
-	// Create a game
-	// Use this instead to create a mini-game:   Game g(3, 3, 2);
-	Game g(9, 10, 40);
+    glutInit(&argc, argv);
 
-	// Play the game
-	g.play();
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    GameWorld* gw = createStudentWorld(assetDirectory);
+    Game().run(gw, "Boulder Blast");
 }
-
-
